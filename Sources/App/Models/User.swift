@@ -89,6 +89,10 @@ extension User {
   var skills: Children<User, Skill> {
     return children()
   }
+  
+  var languages: Children<User, Language> {
+    return children()
+  }
 }
 
 // MARK: JSON
