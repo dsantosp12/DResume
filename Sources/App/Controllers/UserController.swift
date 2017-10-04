@@ -9,10 +9,12 @@ class UserController {
     // Post
     userGroup.post(handler: createUser)
     userGroup.post(User.parameter, "skills", handler: addSkill)
+    userGroup.post(User.parameter, "languages", handler: addLanguage)
     
     // Get
     userGroup.get(User.parameter, handler: getUser)
     userGroup.get(User.parameter, "skills", handler: getUserSkills)
+    userGroup.get(User.parameter, "languages", handler: getLanguageSkills)
   }
   
   func createUser(_ req: Request) throws -> ResponseRepresentable {
@@ -37,6 +39,17 @@ class UserController {
     return skill
   }
   
+  func addLanguage(_ req: Request) throws -> ResponseRepresentable {
+    guard let json = req.json else {
+      throw Abort.badRequest
+    }
+    
+    let language = try Language(json: json)
+    try language.save()
+    
+    return language
+  }
+  
   func getUser(_ req: Request) throws -> ResponseRepresentable {
     let user = try req.parameters.next(User.self)
     return user
@@ -48,4 +61,9 @@ class UserController {
     return try user.skills.all().makeJSON()
   }
   
+  func getLanguageSkills(_ req: Request) throws -> ResponseRepresentable {
+    let user = try req.parameters.next(User.self)
+    
+    return try user.languages.all().makeJSON()
+  }
 }

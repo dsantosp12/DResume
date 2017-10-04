@@ -30,13 +30,13 @@ final class Language: Model {
   
   init(
     name: String,
-    level: Skill.Level,
+    level: Int,
     user: User
     ) {
     self.name = name
     self.userID = user.id
-    self.mLevel = level.rawValue
-    self.level = level
+    self.mLevel = level
+    self.level = Skill.Level(level: level)
   }
   
   required init(row: Row) throws {
