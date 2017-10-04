@@ -21,5 +21,6 @@ extension Config {
       self.preparations.append(User.self)
       self.preparations.append(Skill.self)
       self.preparations.append(Language.self)
+      self.preparations.append(Education.self)
     }
 }

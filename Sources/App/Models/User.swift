@@ -93,6 +93,10 @@ extension User {
   var languages: Children<User, Language> {
     return children()
   }
+  
+  var educations: Children<User, Education> {
+    return children()
+  }
 }
 
 // MARK: JSON
@@ -113,6 +117,7 @@ extension User: JSONConvertible {
   
   func makeJSON() throws -> JSON {
     var json = JSON()
+    try json.set(User.idKey, self.id)
     try json.set(User.firstNameKey, self.firstName)
     try json.set(User.lastNameKey, self.lastName)
     try json.set(User.usernameKey, self.username)
