@@ -116,27 +116,3 @@ extension Attachment: Preparation {
     try database.delete(self)
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
