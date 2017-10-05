@@ -97,6 +97,10 @@ extension User {
   var educations: Children<User, Education> {
     return children()
   }
+  
+  var attachments: Children<User, Attachment> {
+    return children()
+  }
 }
 
 // MARK: JSON

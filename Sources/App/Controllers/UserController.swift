@@ -10,14 +10,18 @@ class UserController {
     userGroup.post(handler: createUser)
     userGroup.post(User.parameter, "skills", handler: addSkill)
     userGroup.post(User.parameter, "languages", handler: addLanguage)
-    userGroup.post(User.parameter, "education", handler: addEducation)
+    userGroup.post(User.parameter, "educations", handler: addEducation)
+    userGroup.post(User.parameter, "attachments", handler: addAttachment)
     
     // Get
     userGroup.get(User.parameter, handler: getUser)
     userGroup.get(User.parameter, "skills", handler: getUserSkills)
-    userGroup.get(User.parameter, "languages", handler: getLanguageSkills)
-    userGroup.get(User.parameter, "education", handler: getEducation)
+    userGroup.get(User.parameter, "languages", handler: getLanguages)
+    userGroup.get(User.parameter, "educations", handler: getEducation)
+    userGroup.get(User.parameter, "attachments", handler: getAttachment)
   }
+  
+  // MARK: POSTERS
   
   func createUser(_ req: Request) throws -> ResponseRepresentable {
     guard let json = req.json else {
@@ -63,6 +67,19 @@ class UserController {
     return education
   }
   
+  func addAttachment(_ req: Request) throws -> ResponseRepresentable {
+    guard let json = req.json else {
+      throw Abort.badRequest
+    }
+    
+    let attachment = try Attachment(json: json)
+    try attachment.save()
+    
+    return attachment
+  }
+  
+  // MARK: GETTERS
+  
   func getUser(_ req: Request) throws -> ResponseRepresentable {
     let user = try req.parameters.next(User.self)
     return user
@@ -74,7 +91,7 @@ class UserController {
     return try user.skills.all().makeJSON()
   }
   
-  func getLanguageSkills(_ req: Request) throws -> ResponseRepresentable {
+  func getLanguages(_ req: Request) throws -> ResponseRepresentable {
     let user = try req.parameters.next(User.self)
     
     return try user.languages.all().makeJSON()
@@ -84,5 +101,11 @@ class UserController {
     let user = try req.parameters.next(User.self)
     
     return try user.educations.all().makeJSON()
+  }
+  
+  func getAttachment(_ req: Request) throws -> ResponseRepresentable {
+    let user = try req.parameters.next(User.self)
+    
+    return try user.attachments.all().makeJSON()
   }
 }
