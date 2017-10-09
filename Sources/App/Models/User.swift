@@ -101,6 +101,10 @@ extension User {
   var attachments: Children<User, Attachment> {
     return children()
   }
+  
+  var portfolio: Children<User, Portfolio> {
+    return children()
+  }
 }
 
 // MARK: JSON

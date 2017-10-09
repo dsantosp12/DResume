@@ -23,5 +23,6 @@ extension Config {
       self.preparations.append(Language.self)
       self.preparations.append(Education.self)
       self.preparations.append(Attachment.self)
+      self.preparations.append(Portfolio.self)
     }
 }
