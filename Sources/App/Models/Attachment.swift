@@ -13,34 +13,29 @@ final class Attachment: Model {
   let storage = Storage()
   
   let name: String
-  let data: Blob
-  let fileExtension: String
+  let url: String
   let addedOn: Date
   let userID: Identifier?
   
   static let nameKey = "name"
-  static let dataKey = "data"
-  static let fileExtensionKey = "fileExtension"
+  static let urlKey = "url"
   static let addedOnKey = "addedOn"
   static let userIDKey = "userID"
   
   init(name: String,
-       data: Blob,
-       fileExtension: String,
+       url: String,
        addedOn: Date,
        user: User
     ) {
     self.name = name
-    self.data = data
-    self.fileExtension = fileExtension
+    self.url = url
     self.addedOn = addedOn
     self.userID = user.id
   }
   
   required init(row: Row) throws {
     self.name = try row.get(Attachment.nameKey)
-    self.data = try row.get(Attachment.dataKey)
-    self.fileExtension = try row.get(Attachment.fileExtensionKey)
+    self.url = try row.get(Attachment.urlKey)
     self.addedOn = try row.get(Attachment.addedOnKey)
     self.userID = try row.get(User.foreignIdKey)
   }
@@ -48,8 +43,7 @@ final class Attachment: Model {
   func makeRow() throws -> Row {
     var row = Row()
     try row.set(Attachment.nameKey, self.name)
-    try row.set(Attachment.dataKey, self.data)
-    try row.set(Attachment.fileExtensionKey, self.fileExtension)
+    try row.set(Attachment.urlKey, self.url)
     try row.set(Attachment.addedOnKey, self.addedOn)
     try row.set(User.foreignIdKey, self.userID)
     
@@ -77,8 +71,7 @@ extension Attachment: JSONConvertible {
     
     try self.init(
       name: json.get(Attachment.nameKey),
-      data: json.get(Attachment.dataKey),
-      fileExtension: json.get(Attachment.fileExtensionKey),
+      url: json.get(Attachment.urlKey),
       addedOn: json.get(Attachment.addedOnKey),
       user: user
     )
@@ -87,8 +80,7 @@ extension Attachment: JSONConvertible {
   func makeJSON() throws -> JSON {
     var json = JSON()
     try json.set(Attachment.nameKey, self.name)
-    try json.set(Attachment.dataKey, self.data)
-    try json.set(Attachment.fileExtensionKey, self.fileExtension)
+    try json.set(Attachment.urlKey, self.url)
     try json.set(Attachment.addedOnKey, self.addedOn)
     try json.set(Attachment.userIDKey, self.userID)
     
@@ -105,8 +97,7 @@ extension Attachment: Preparation {
     try database.create(self) { builder in
       builder.id()
       builder.string(Attachment.nameKey)
-      builder.bytes(Attachment.dataKey)
-      builder.string(Attachment.fileExtensionKey)
+      builder.string(Attachment.urlKey)
       builder.date(Attachment.addedOnKey)
       builder.parent(User.self)
     }

@@ -2,8 +2,8 @@ import Vapor
 import FluentProvider
 
 class UserController {
+  
   func addRoutes(to drop: Droplet) {
-    
     let userGroup = drop.grouped("api", "v1", "user")
     
     // Post
