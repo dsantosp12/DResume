@@ -38,6 +38,10 @@ extension Portfolio {
   var owner: Parent<Portfolio, User> {
     return parent(id: self.userID)
   }
+  
+  var sections: Children<Portfolio, Section> {
+    return children()
+  }
 }
 
 // MARK: JSON

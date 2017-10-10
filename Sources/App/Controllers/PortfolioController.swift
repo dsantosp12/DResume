@@ -8,12 +8,14 @@ class PortfolioController {
     
     // Post
     portfolioGroup.post(handler: addPortfolio)
+    portfolioGroup.post(Portfolio.parameter, "sections", handler: addSection)
     
     // Get
     portfolioGroup.get(Portfolio.parameter, handler: getPortfolio)
-    
+    portfolioGroup.get(Portfolio.parameter, "sections", handler: getSections)
   }
   
+  // Posters
   func addPortfolio(_ req: Request) throws -> ResponseRepresentable {
     guard let json = req.json else {
       throw Abort.badRequest
@@ -25,9 +27,27 @@ class PortfolioController {
     return portfolio
   }
   
+  func addSection(_ req: Request) throws -> ResponseRepresentable {
+    guard let json = req.json else {
+      throw Abort.badRequest
+    }
+    
+    let section = try Section(json: json)
+    try section.save()
+    
+    return section
+  }
+  
+  // Getters
   func getPortfolio(_ req: Request) throws -> ResponseRepresentable {
     let portfolio = try req.parameters.next(Portfolio.self)
     
     return portfolio
+  }
+  
+  func getSections(_ req: Request) throws -> ResponseRepresentable {
+    let portfolio = try req.parameters.next(Portfolio.self)
+    
+    return try portfolio.sections.all().makeJSON()
   }
 }
