@@ -42,6 +42,10 @@ extension Portfolio {
   var sections: Children<Portfolio, Section> {
     return children()
   }
+  
+  var links: Children<Portfolio, Link> {
+    return children()
+  }
 }
 
 // MARK: JSON

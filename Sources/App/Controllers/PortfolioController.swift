@@ -15,7 +15,8 @@ class PortfolioController {
     portfolioGroup.get(Portfolio.parameter, "sections", handler: getSections)
   }
   
-  // Posters
+  // MARK: POSTERS
+  
   func addPortfolio(_ req: Request) throws -> ResponseRepresentable {
     guard let json = req.json else {
       throw Abort.badRequest
@@ -38,7 +39,8 @@ class PortfolioController {
     return section
   }
   
-  // Getters
+  // MARK: GETTERS
+  
   func getPortfolio(_ req: Request) throws -> ResponseRepresentable {
     let portfolio = try req.parameters.next(Portfolio.self)
     
