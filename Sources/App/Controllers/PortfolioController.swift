@@ -8,13 +8,17 @@ class PortfolioController {
     
     // Post
     portfolioGroup.post(handler: addPortfolio)
-    portfolioGroup.post(Portfolio.parameter, "sections", handler: addSection)
     portfolioGroup.post(Portfolio.parameter, "links", handler: addLink)
+    portfolioGroup.post(Portfolio.parameter, "sections", handler: addSection)
+    portfolioGroup.post(Portfolio.parameter, "section", Section.parameter,
+                        "item", handler: addSectionItem)
     
     // Get
     portfolioGroup.get(Portfolio.parameter, handler: getPortfolio)
-    portfolioGroup.get(Portfolio.parameter, "sections", handler: getSections)
     portfolioGroup.get(Portfolio.parameter, "links", handler: getLinks)
+    portfolioGroup.get(Portfolio.parameter, "sections", handler: getSections)
+    portfolioGroup.post(Portfolio.parameter, "section", Section.parameter,
+                        "item", SectionItem.parameter, handler: getSectionItem)
   }
   
   // MARK: POSTERS
@@ -26,7 +30,7 @@ class PortfolioController {
     
     let portfolio = try Portfolio(json: json)
     try portfolio.save()
-    
+
     return portfolio
   }
   
@@ -52,6 +56,21 @@ class PortfolioController {
     return link
   }
   
+  func addSectionItem(_ req: Request) throws -> ResponseRepresentable {
+    let section = try req.parameters.next(Section.self)
+    
+    guard var json = req.json  else {
+      throw Abort.badRequest
+    }
+    
+    try json.set(SectionItem.sectionIDKey, section.id)
+    
+    let sectionItem = try SectionItem(json: json)
+    try sectionItem.save()
+    
+    return sectionItem
+  }
+  
   // MARK: GETTERS
   
   func getPortfolio(_ req: Request) throws -> ResponseRepresentable {
@@ -70,5 +89,11 @@ class PortfolioController {
     let portfolio = try req.parameters.next(Portfolio.self)
     
     return try portfolio.links.all().makeJSON()
+  }
+  
+  func getSectionItem(_ req: Request) throws -> ResponseRepresentable {
+    let sectionItem = try req.parameters.next(SectionItem.self)
+    
+    return sectionItem
   }
 }

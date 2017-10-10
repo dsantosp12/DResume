@@ -43,6 +43,10 @@ extension Section {
   var owner: Parent<Section, Portfolio> {
     return parent(id: self.portfolioID)
   }
+  
+  var sectionItems: Children<Section, SectionItem> {
+    return children()
+  }
 }
 
 // MARK: JSON

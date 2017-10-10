@@ -26,5 +26,6 @@ extension Config {
       self.preparations.append(Portfolio.self)
       self.preparations.append(Link.self)
       self.preparations.append(Section.self)
+      self.preparations.append(SectionItem.self)
     }
 }
