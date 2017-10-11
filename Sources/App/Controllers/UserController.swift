@@ -19,6 +19,12 @@ class UserController {
     userGroup.get(User.parameter, "languages", handler: getLanguages)
     userGroup.get(User.parameter, "educations", handler: getEducation)
     userGroup.get(User.parameter, "attachments", handler: getAttachment)
+    
+    // Delete
+    userGroup.delete("skill", Skill.parameter, handler: removeSkill)
+    
+    // Put
+    userGroup.put("skill", Skill.parameter, handler: updateSkill)
   }
   
   // MARK: POSTERS
@@ -108,4 +114,47 @@ class UserController {
     
     return try user.attachments.all().makeJSON()
   }
+  
+  // MARK: DELETERS
+  
+  func removeSkill(_ req: Request) throws -> ResponseRepresentable {
+    let skill = try req.parameters.next(Skill.self)
+    try skill.delete()
+    
+    return Response(status: .ok)
+  }
+  
+  // MARK: PUTTERS
+  
+  func updateSkill(_ req: Request) throws -> ResponseRepresentable {
+    let skill = try req.parameters.next(Skill.self)
+    
+    guard let json = req.json else {
+      throw Abort.badRequest
+    }
+    
+    try skill.update(with: json)
+   
+    return skill
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
