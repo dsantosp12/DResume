@@ -22,9 +22,11 @@ class UserController {
     
     // Delete
     userGroup.delete("skill", Skill.parameter, handler: removeSkill)
+    userGroup.delete("language", Language.parameter, handler: removeLanguage)
     
     // Put
     userGroup.put("skill", Skill.parameter, handler: updateSkill)
+    userGroup.put("language", Language.parameter, handler: updateLanguage)
   }
   
   // MARK: POSTERS
@@ -124,6 +126,13 @@ class UserController {
     return Response(status: .ok)
   }
   
+  func removeLanguage(_ req: Request) throws -> ResponseRepresentable {
+    let language = try req.parameters.next(Language.self)
+    try language.delete()
+    
+    return Response(status: .ok)
+  }
+  
   // MARK: PUTTERS
   
   func updateSkill(_ req: Request) throws -> ResponseRepresentable {
@@ -136,6 +145,18 @@ class UserController {
     try skill.update(with: json)
    
     return skill
+  }
+  
+  func updateLanguage(_ req: Request) throws -> ResponseRepresentable {
+    let language = try req.parameters.next(Language.self)
+    
+    guard let json = req.json else {
+      throw Abort.badRequest
+    }
+    
+    try language.update(with: json)
+    
+    return language
   }
 }
 

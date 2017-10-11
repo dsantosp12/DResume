@@ -54,6 +54,13 @@ final class Language: Model {
     
     return row
   }
+  
+  func update(with json: JSON) throws {
+    self.name = try json.get(Language.nameKey)
+    self.level = Skill.Level(level: try json.get(Language.levelKey))
+    
+    try self.save()
+  }
 }
 
 // MARK: Relationship
@@ -84,7 +91,7 @@ extension Language: JSONConvertible {
   
   func makeJSON() throws -> JSON {
     var json = JSON()
-    
+    try json.set(Language.idKey, self.id)
     try json.set(Language.nameKey, self.name)
     try json.set(Language.levelKey, self.level.rawValue)
     try json.set(Language.userIDKey, self.userID)
