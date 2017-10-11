@@ -81,6 +81,17 @@ final class User: Model {
     
     return row
   }
+  
+  func fullUser() throws -> JSON {
+    var userData = try self.makeJSON()
+    
+    try userData.set("skills", self.skills.all())
+    try userData.set("attachments", self.attachments.all())
+    try userData.set("educations", self.educations.all())
+    try userData.set("languages", self.languages.all())
+    
+    return userData
+  }
 }
 
 // MARK: Relation

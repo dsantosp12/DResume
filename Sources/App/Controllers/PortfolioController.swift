@@ -11,14 +11,17 @@ class PortfolioController {
     portfolioGroup.post(Portfolio.parameter, "links", handler: addLink)
     portfolioGroup.post(Portfolio.parameter, "sections", handler: addSection)
     portfolioGroup.post(Portfolio.parameter, "section", Section.parameter,
-                        "item", handler: addSectionItem)
+                        "items", handler: addSectionItem)
     
     // Get
     portfolioGroup.get(Portfolio.parameter, handler: getPortfolio)
+    portfolioGroup.get(Portfolio.parameter, "full", handler: getFullPortfolio)
     portfolioGroup.get(Portfolio.parameter, "links", handler: getLinks)
     portfolioGroup.get(Portfolio.parameter, "sections", handler: getSections)
-    portfolioGroup.post(Portfolio.parameter, "section", Section.parameter,
-                        "item", SectionItem.parameter, handler: getSectionItem)
+    portfolioGroup.get(Portfolio.parameter, "section", "item",
+                       SectionItem.parameter, handler: getSectionItem)
+    portfolioGroup.get(Portfolio.parameter, "section", Section.parameter,
+                       "items", handler: getSectionItems)
   }
   
   // MARK: POSTERS
@@ -79,6 +82,14 @@ class PortfolioController {
     return portfolio
   }
   
+  func getFullPortfolio(_ req: Request) throws -> ResponseRepresentable {
+    let portfolio = try req.parameters.next(Portfolio.self)
+    
+    let portfolioData = try portfolio.fullPortfolio()    
+    
+    return portfolioData
+  }
+  
   func getSections(_ req: Request) throws -> ResponseRepresentable {
     let portfolio = try req.parameters.next(Portfolio.self)
     
@@ -95,5 +106,11 @@ class PortfolioController {
     let sectionItem = try req.parameters.next(SectionItem.self)
     
     return sectionItem
+  }
+  
+  func getSectionItems(_ req: Request) throws -> ResponseRepresentable {
+    let section = try req.parameters.next(Section.self)
+    
+    return try section.sectionItems.all().makeJSON()
   }
 }

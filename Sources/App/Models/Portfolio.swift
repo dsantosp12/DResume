@@ -30,6 +30,41 @@ final class Portfolio: Model {
     try row.set(User.foreignIdKey, self.userID)
     return row
   }
+  
+  func fullPortfolio() throws -> JSON {
+    var data = try self.makeJSON()
+    data.removeKey("userID")
+    
+    // Sections
+    let sections = try self.getSections()
+    try data.set("sections", sections)
+    
+    guard let user = try self.owner.get() else {
+      throw Abort.badRequest
+    }
+    
+    try data.set("user", user.fullUser())
+    try data.set("links", self.links.all())
+    
+    return data
+  }
+  
+  private func getSections() throws -> [JSON] {
+    var sections = Array<JSON>()
+    
+    for section in try self.sections.all() {
+      var sectionItems = Array<JSON>()
+      
+      for item in try section.sectionItems.all() {
+        sectionItems.append(try item.makeJSON())
+      }
+      
+      var sectionJSON = try section.makeJSON()
+      try sectionJSON.set("items", sectionItems)
+      sections.append(sectionJSON)
+    }
+     return sections
+  }
 }
 
 // MARK: Relation
