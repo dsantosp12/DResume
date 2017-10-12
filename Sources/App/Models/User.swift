@@ -10,6 +10,15 @@ import FluentProvider
 import HTTP
 import BCrypt
 
+extension BCrypt.Hash {
+  static func hash(password: String) throws -> String {
+    let hash = try BCrypt.Hash.make(message: password)
+    guard let hashedPassword = String(bytes: hash, encoding: .utf8) else {
+      throw Abort.badRequest
+    }
+    return hashedPassword
+  }
+}
 
 final class User: Model {
   let storage = Storage()
@@ -23,12 +32,12 @@ final class User: Model {
   var summary: String
   var location: String
   
-  static let firstNameKey = "firstName"
-  static let lastNameKey = "lastName"
+  static let firstNameKey = "first_name"
+  static let lastNameKey = "last_name"
   static let usernameKey = "username"
   static let passwordKey = "password"
   static let emailKey = "email"
-  static let dateOfBirthKey = "dateOfBirth"
+  static let dateOfBirthKey = "date_of_birth"
   static let summaryKey = "summary"
   static let locationKey = "location"
   
@@ -44,13 +53,7 @@ final class User: Model {
     self.firstName = firstName
     self.lastName = lastName
     self.username = username
-    
-    let hash = try BCrypt.Hash.make(message: password)
-    guard let hashedPassword = String(bytes: hash, encoding: .utf8) else {
-      throw Abort.badRequest
-    }
-    self.password = hashedPassword
-    
+    self.password = try BCrypt.Hash.hash(password: password)
     self.email = email
     self.dateOfBirth = dateOfBirth
     self.summary = summary
@@ -80,6 +83,19 @@ final class User: Model {
     try row.set(User.locationKey, self.location)
     
     return row
+  }
+  
+  func update(with json: JSON) throws {
+    self.firstName = try json.get(User.firstNameKey)
+    self.lastName = try json.get(User.lastNameKey)
+    self.username = try json.get(User.usernameKey)
+    self.password = try BCrypt.Hash.hash(password: try json.get(User.passwordKey))
+    self.email = try json.get(User.emailKey)
+    self.dateOfBirth = try json.get(User.dateOfBirthKey)
+    self.summary = try json.get(User.summaryKey)
+    self.location = try json.get(User.locationKey)
+    
+    try self.save()
   }
   
   func fullUser() throws -> JSON {

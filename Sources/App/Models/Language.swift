@@ -26,7 +26,7 @@ final class Language: Model {
   
   static let nameKey = "name"
   static let levelKey = "level"
-  static let userIDKey = "userID"
+  static let userIDKey = "user_id"
   
   init(
     name: String,

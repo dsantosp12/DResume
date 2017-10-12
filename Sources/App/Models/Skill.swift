@@ -58,7 +58,7 @@ final class Skill: Model {
   
   static let nameKey = "name"
   static let levelKey = "level"
-  static let userIDKey = "userID"
+  static let userIDKey = "user_id"
   
   init(name: String, level: Int, user: User) {
     self.name = name

@@ -16,7 +16,7 @@ final class Link: Model {
   let portfolioID: Identifier?
   
   static let urlKey = "url"
-  static let portfolioIDKey = "portfolioID"
+  static let portfolioIDKey = "portfolio_id"
   
   init(url: String, portfolio: Portfolio) {
     self.url = url

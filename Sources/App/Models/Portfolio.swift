@@ -14,7 +14,7 @@ final class Portfolio: Model {
   
   let userID: Identifier?
   
-  static let userIDKey = "userID"
+  static let userIDKey = "user_id"
   
   init(user: User) {
     self.userID = user.id

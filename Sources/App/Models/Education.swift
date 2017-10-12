@@ -22,7 +22,7 @@ final class Education: Model {
   static let degreeKey = "degree"
   static let fromKey = "from"
   static let toKey = "to"
-  static let userIDKey = "userID"
+  static let userIDKey = "user_id"
   
   init(
     institution: String,

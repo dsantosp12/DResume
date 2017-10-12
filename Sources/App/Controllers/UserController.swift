@@ -21,10 +21,12 @@ class UserController {
     userGroup.get(User.parameter, "attachments", handler: getAttachment)
     
     // Delete
+    userGroup.delete(User.parameter, handler: removeUser)
     userGroup.delete("skill", Skill.parameter, handler: removeSkill)
     userGroup.delete("language", Language.parameter, handler: removeLanguage)
     
     // Put
+    userGroup.put(User.parameter, handler: updateUser)
     userGroup.put("skill", Skill.parameter, handler: updateSkill)
     userGroup.put("language", Language.parameter, handler: updateLanguage)
   }
@@ -54,9 +56,13 @@ class UserController {
   }
   
   func addLanguage(_ req: Request) throws -> ResponseRepresentable {
-    guard let json = req.json else {
+    let user = try req.parameters.next(User.self)
+    
+    guard var json = req.json else {
       throw Abort.badRequest
     }
+    
+    try json.set(Language.userIDKey, user.id)
     
     let language = try Language(json: json)
     try language.save()
@@ -119,6 +125,13 @@ class UserController {
   
   // MARK: DELETERS
   
+  func removeUser(_ req: Request) throws -> ResponseRepresentable {
+    let user = try req.parameters.next(User.self)
+    try user.delete()
+    
+    return Response(status: .ok)
+  }
+  
   func removeSkill(_ req: Request) throws -> ResponseRepresentable {
     let skill = try req.parameters.next(Skill.self)
     try skill.delete()
@@ -134,6 +147,18 @@ class UserController {
   }
   
   // MARK: PUTTERS
+  
+  func updateUser(_ req: Request) throws -> ResponseRepresentable {
+    let user = try req.parameters.next(User.self)
+    
+    guard let json = req.json else {
+      throw Abort.badRequest
+    }
+    
+    try user.update(with: json)
+    
+    return user
+  }
   
   func updateSkill(_ req: Request) throws -> ResponseRepresentable {
     let skill = try req.parameters.next(Skill.self)

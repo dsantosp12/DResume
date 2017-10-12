@@ -19,8 +19,8 @@ final class Attachment: Model {
   
   static let nameKey = "name"
   static let urlKey = "url"
-  static let addedOnKey = "addedOn"
-  static let userIDKey = "userID"
+  static let addedOnKey = "added_on"
+  static let userIDKey = "user_id"
   
   init(name: String,
        url: String,

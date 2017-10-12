@@ -16,7 +16,7 @@ final class Section: Model {
   var portfolioID: Identifier?
   
   static let titleKey = "title"
-  static let portfolioIDKey = "portfolioID"
+  static let portfolioIDKey = "portfolio_id"
   
   init(title: String, portfolio: Portfolio) {
     self.title = title
