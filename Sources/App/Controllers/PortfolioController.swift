@@ -22,6 +22,9 @@ class PortfolioController {
                        SectionItem.parameter, handler: getSectionItem)
     portfolioGroup.get(Portfolio.parameter, "section", Section.parameter,
                        "items", handler: getSectionItems)
+    
+    // Delete
+    portfolioGroup.delete(Portfolio.parameter, handler: removePortfolio)
   }
   
   // MARK: POSTERS
@@ -112,5 +115,25 @@ class PortfolioController {
     let section = try req.parameters.next(Section.self)
     
     return try section.sectionItems.all().makeJSON()
+  }
+  
+  // MARK: Deleters
+  func removePortfolio(_ req: Request) throws -> ResponseRepresentable {
+    let portfolio = try req.parameters.next(Portfolio.self)
+    
+    try portfolio.links.all().forEach { link in
+      try link.delete()
+    }
+    
+    try portfolio.sections.all().forEach{ section in
+      try section.sectionItems.all().forEach { item in
+        try item.delete()
+      }
+      try section.delete()
+    }
+    
+    try portfolio.delete()
+    
+    return Response(status: .ok)
   }
 }

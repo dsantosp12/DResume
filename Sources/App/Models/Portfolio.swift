@@ -33,7 +33,7 @@ final class Portfolio: Model {
   
   func fullPortfolio() throws -> JSON {
     var data = try self.makeJSON()
-    data.removeKey("userID")
+    data.removeKey(User.idKey)
     
     // Sections
     let sections = try self.getSections()
