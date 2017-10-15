@@ -79,6 +79,7 @@ extension Attachment: JSONConvertible {
   
   func makeJSON() throws -> JSON {
     var json = JSON()
+    try json.set(Attachment.idKey, self.id)
     try json.set(Attachment.nameKey, self.name)
     try json.set(Attachment.urlKey, self.url)
     try json.set(Attachment.addedOnKey, self.addedOn)

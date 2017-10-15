@@ -25,6 +25,8 @@ class UserController {
     userGroup.delete("skill", Skill.parameter, handler: removeSkill)
     userGroup.delete("language", Language.parameter, handler: removeLanguage)
     userGroup.delete("education", Education.parameter, handler: removeEducation)
+    userGroup.delete("attachment", Attachment.parameter,
+                     handler: removeAttachment)
     
     // Put
     userGroup.put(User.parameter, handler: updateUser)
@@ -151,6 +153,13 @@ class UserController {
   func removeEducation(_ req: Request) throws -> ResponseRepresentable {
     let education = try req.parameters.next(Education.self)
     try education.delete()
+    
+    return Response(status: .ok)
+  }
+  
+  func removeAttachment(_ req: Request) throws -> ResponseRepresentable {
+    let attachment = try req.parameters.next(Attachment.self)
+    try attachment.delete()
     
     return Response(status: .ok)
   }
