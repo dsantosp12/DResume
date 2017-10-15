@@ -24,11 +24,13 @@ class UserController {
     userGroup.delete(User.parameter, handler: removeUser)
     userGroup.delete("skill", Skill.parameter, handler: removeSkill)
     userGroup.delete("language", Language.parameter, handler: removeLanguage)
+    userGroup.delete("education", Education.parameter, handler: removeEducation)
     
     // Put
     userGroup.put(User.parameter, handler: updateUser)
     userGroup.put("skill", Skill.parameter, handler: updateSkill)
     userGroup.put("language", Language.parameter, handler: updateLanguage)
+    userGroup.put("education", Education.parameter, handler: updateEducation)
   }
   
   // MARK: POSTERS
@@ -146,6 +148,13 @@ class UserController {
     return Response(status: .ok)
   }
   
+  func removeEducation(_ req: Request) throws -> ResponseRepresentable {
+    let education = try req.parameters.next(Education.self)
+    try education.delete()
+    
+    return Response(status: .ok)
+  }
+  
   // MARK: PUTTERS
   
   func updateUser(_ req: Request) throws -> ResponseRepresentable {
@@ -182,6 +191,18 @@ class UserController {
     try language.update(with: json)
     
     return language
+  }
+  
+  func updateEducation(_ req: Request) throws -> ResponseRepresentable {
+    let education = try req.parameters.next(Education.self)
+    
+    guard let json = req.json else {
+      throw Abort.badRequest
+    }
+    
+    try education.update(with: json)
+    
+    return education
   }
 }
 

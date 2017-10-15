@@ -12,11 +12,11 @@ import HTTP
 final class Education: Model {
   let storage = Storage()
   
-  let institution: String
-  let degree: String
-  let from: Date
-  let to: Date
-  let userID: Identifier?
+  var institution: String
+  var degree: String
+  var from: Date
+  var to: Date
+  var userID: Identifier?
   
   static let institutionKey = "institution"
   static let degreeKey = "degree"
@@ -57,6 +57,18 @@ final class Education: Model {
     return row
   }
   
+  func update(with json: JSON) throws {
+    let education = try Education(json: json)
+    
+    self.institution = education.institution
+    self.degree = education.degree
+    self.from = education.from
+    self.to = education.to
+    self.userID = education.userID
+    
+    try self.save()
+  }
+  
 }
 
 // MARK: Relationship
@@ -88,6 +100,7 @@ extension Education: JSONConvertible {
   
   func makeJSON() throws -> JSON {
     var json = JSON()
+    try json.set(Education.idKey, self.id)
     try json.set(Education.institutionKey, self.institution)
     try json.set(Education.degreeKey, self.degree)
     try json.set(Education.fromKey, self.from)

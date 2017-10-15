@@ -11,18 +11,10 @@ import HTTP
 class RouteTests: TestCase {
     let drop = try! Droplet.testable()
     
-    func testHello() throws {
+    func testUser404() throws {
         try drop
-            .testResponse(to: .get, at: "hello")
-            .assertStatus(is: .ok)
-            .assertJSON("hello", equals: "world")
-    }
-
-    func testInfo() throws {
-        try drop
-            .testResponse(to: .get, at: "info")
-            .assertStatus(is: .ok)
-            .assertBody(contains: "0.0.0.0")
+            .testResponse(to: .get, at: "/api/v1/user/1234")
+            .assertStatus(is: .notFound)
     }
 }
 
@@ -33,7 +25,6 @@ extension RouteTests {
     /// to function properly.
     /// See ./Tests/LinuxMain.swift for examples
     static let allTests = [
-        ("testHello", testHello),
-        ("testInfo", testInfo),
+        ("testUser404", testUser404)
     ]
 }
