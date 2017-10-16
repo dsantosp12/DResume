@@ -35,6 +35,14 @@ final class Section: Model {
     
     return row
   }
+  
+  func update(with json: JSON) throws {
+    let section = try Section(json: json)
+    
+    self.title = section.title
+    
+    try self.save()
+  }
 }
 
 // MARK: Relation

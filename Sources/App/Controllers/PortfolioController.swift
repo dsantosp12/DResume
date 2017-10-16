@@ -23,8 +23,15 @@ class PortfolioController {
     portfolioGroup.get(Portfolio.parameter, "section", Section.parameter,
                        "items", handler: getSectionItems)
     
+    // Put
+    portfolioGroup.put("link", Link.parameter, handler: updateLink)
+    portfolioGroup.put("section", Section.parameter, handler: updateSection)
+    
     // Delete
     portfolioGroup.delete(Portfolio.parameter, handler: removePortfolio)
+    portfolioGroup.delete("link", Link.parameter, handler: removeLink)
+    portfolioGroup.delete("section", Section.parameter, handler: removeSection)
+  
   }
   
   // MARK: POSTERS
@@ -117,7 +124,37 @@ class PortfolioController {
     return try section.sectionItems.all().makeJSON()
   }
   
-  // MARK: Deleters
+  // MARK: PUTTERS
+  
+  func updateLink(_ req: Request) throws -> ResponseRepresentable {
+    let link = try req.parameters.next(Link.self)
+    
+    guard let json = req.json else {
+      throw Abort.badRequest
+    }
+    
+    try link.update(with: json)
+    
+    return link
+  }
+  
+  func updateSection(_ req: Request) throws -> ResponseRepresentable {
+    let section = try req.parameters.next(Section.self)
+    
+    guard let json = req.json else {
+      throw Abort.badRequest
+    }
+    
+    try section.update(with: json)
+    
+    return section
+  }
+  
+  // MARK: DELETERS
+  
+  /*
+     Remove the entire portfolio
+   */
   func removePortfolio(_ req: Request) throws -> ResponseRepresentable {
     let portfolio = try req.parameters.next(Portfolio.self)
     
@@ -133,6 +170,30 @@ class PortfolioController {
     }
     
     try portfolio.delete()
+    
+    return Response(status: .ok)
+  }
+  
+  /*
+     Remove link
+   */
+  func removeLink(_ req: Request) throws -> ResponseRepresentable {
+    let link = try req.parameters.next(Link.self)
+    try link.delete()
+    
+    return Response(status: .ok)
+  }
+  /*
+     Remove section and items associated with that section
+   */
+  func removeSection(_ req: Request) throws -> ResponseRepresentable {
+    let section = try req.parameters.next(Section.self)
+    
+    for item in try section.sectionItems.all() {
+      try item.delete()
+    }
+    
+    try section.delete()
     
     return Response(status: .ok)
   }

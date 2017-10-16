@@ -35,6 +35,14 @@ final class Link: Model {
     
     return row
   }
+  
+  func update(with json: JSON) throws {
+    let link = try Link(json: json)
+    
+    self.url = link.url
+    
+    try self.save()
+  }
 }
 
 // MARK: Relation
