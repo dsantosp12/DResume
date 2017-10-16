@@ -26,11 +26,13 @@ class PortfolioController {
     // Put
     portfolioGroup.put("link", Link.parameter, handler: updateLink)
     portfolioGroup.put("section", Section.parameter, handler: updateSection)
+    portfolioGroup.put("sections", "item", SectionItem.parameter, handler: updateItem)
     
     // Delete
     portfolioGroup.delete(Portfolio.parameter, handler: removePortfolio)
     portfolioGroup.delete("link", Link.parameter, handler: removeLink)
     portfolioGroup.delete("section", Section.parameter, handler: removeSection)
+    portfolioGroup.delete("sections", "item", SectionItem.parameter, handler: removeItem)
   
   }
   
@@ -150,6 +152,18 @@ class PortfolioController {
     return section
   }
   
+  func updateItem(_ req: Request) throws -> ResponseRepresentable {
+    let item = try req.parameters.next(SectionItem.self)
+    
+    guard let json = req.json else {
+      throw Abort.badRequest
+    }
+    
+    try item.update(with: json)
+    
+    return item
+  }
+  
   // MARK: DELETERS
   
   /*
@@ -183,17 +197,29 @@ class PortfolioController {
     
     return Response(status: .ok)
   }
+  
   /*
      Remove section and items associated with that section
    */
   func removeSection(_ req: Request) throws -> ResponseRepresentable {
     let section = try req.parameters.next(Section.self)
     
-    for item in try section.sectionItems.all() {
+    try section.sectionItems.all().forEach{ item in
       try item.delete()
     }
-    
+      
     try section.delete()
+    
+    return Response(status: .ok)
+  }
+  
+  /*
+     Remove item
+   */
+  func removeItem(_ req: Request) throws -> ResponseRepresentable {
+    let item = try req.parameters.next(SectionItem.self)
+    
+    try item.delete()
     
     return Response(status: .ok)
   }

@@ -68,6 +68,17 @@ final class SectionItem: Model {
     
     return row
   }
+  
+  func update(with json: JSON) throws {
+    self.title = try json.get(SectionItem.titleKey)
+    self.subTitle = try json.get(SectionItem.subTitleKey)
+    self.content = try json.get(SectionItem.contentKey)
+    self.attachmentURL = try json.get(SectionItem.attachmentURLKey)
+    self.from = try json.get(SectionItem.fromKey)
+    self.to = try json.get(SectionItem.toKey)
+    
+    try self.save()
+  }
 }
 
 // MARK: Relation
